@@ -1,77 +1,110 @@
 import React from 'react';
-import { Package, MapPin, Tag } from 'lucide-react';
+import { Package, Tag, ChevronRight, Star, ShieldCheck, PenTool } from 'lucide-react';
 
 const MOCK_PARTS = [
-    { id: 1, name: 'Brake Pads Set', car: 'Toyota Camry 2018-2023', price: 'AED 245', image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=400&auto=format&fit=crop', stock: true },
-    { id: 2, name: 'Oil Filter', car: 'Nissan Altima 2015-2020', price: 'AED 45', image: 'https://images.unsplash.com/photo-1635773100235-44c1d2f58842?q=80&w=400&auto=format&fit=crop', stock: true },
-    { id: 3, name: 'Spark Plugs (Platinum)', car: 'Honda Accord 2018+', price: 'AED 180', image: 'https://images.unsplash.com/photo-1597762137731-08f36c4b9d0e?q=80&w=400&auto=format&fit=crop', stock: true },
-    { id: 4, name: 'Air Filter', car: 'Hyundai Tucson 2016-2021', price: 'AED 65', image: 'https://images.unsplash.com/photo-1636113645324-4f8087948332?q=80&w=400&auto=format&fit=crop', stock: true },
-    { id: 5, name: 'Shock Absorber (Front)', car: 'Lexus LS 2010-2017', price: 'AED 420', image: 'https://images.unsplash.com/photo-1605367611438-297f6734d85e?q=80&w=400&auto=format&fit=crop', stock: true },
-    { id: 6, name: 'Headlight Assembly', car: 'Mitsubishi Pajero 2008+', price: 'AED 850', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=400&auto=format&fit=crop', stock: true },
+    { id: 1, name: 'Performance Brake Pads', car: 'Toyota Camry 2018+', price: '245', image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.8 },
+    { id: 2, name: 'Synthetic Oil Filter', car: 'Nissan Altima 2015-2020', price: '45', image: 'https://images.unsplash.com/photo-1635773100235-44c1d2f58842?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.9 },
+    { id: 3, name: 'Iridium Spark Plugs', car: 'Honda Accord 2018+', price: '180', image: 'https://images.unsplash.com/photo-1597762137731-08f36c4b9d0e?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.7 },
+    { id: 4, name: 'Active Carbon Air Filter', car: 'Hyundai Tucson 2016+', price: '65', image: 'https://images.unsplash.com/photo-1636113645324-4f8087948332?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.6 },
+    { id: 5, name: 'Gas-Charged Shock Absorber', car: 'Lexus LS 2010-2017', price: '420', image: 'https://images.unsplash.com/photo-1605367611438-297f6734d85e?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.9 },
+    { id: 6, name: 'LED Headlight Unit', car: 'Mitsubishi Pajero 2008+', price: '850', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.8 },
 ];
 
 const Catalogue = () => {
     return (
         <div className="fade-in">
-            <div style={{ marginBottom: '2rem' }}>
-                <h2 style={{ fontSize: '1.875rem', marginBottom: '0.5rem' }}>Available Parts</h2>
-                <p style={{ color: 'var(--text-muted)' }}>Common parts in stock at Sharjah Industrial Area dealers.</p>
-            </div>
+            <header style={{ marginBottom: '3rem', marginTop: '1rem' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'white', padding: '0.5rem 1rem', borderRadius: 'var(--radius-xl)', boxShadow: 'var(--shadow-sm)', marginBottom: '1.25rem', border: '1px solid var(--border)' }}>
+                    <ShieldCheck size={16} style={{ color: 'var(--success)' }} />
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Verified Sharjah Dealers</span>
+                </div>
+                <h2 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'var(--primary)', marginBottom: '1rem' }}>
+                    Genuine Spare Parts
+                </h2>
+                <p style={{ fontSize: '1.125rem', color: 'var(--text-muted)', maxWidth: '600px' }}>
+                    Browse our curated selection of high-quality components, sourced directly from trusted Sharjah dealers.
+                </p>
+            </header>
 
-            <div style={{
+            <div className="parts-grid" style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-                gap: '2rem'
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: '2.5rem 1.5rem'
             }}>
                 {MOCK_PARTS.map(part => (
-                    <div key={part.id} className="card" style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div key={part.id} className="card part-card" style={{ display: 'flex', flexDirection: 'column' }}>
                         <div style={{
-                            height: '180px',
+                            height: '240px',
                             backgroundColor: '#f1f5f9',
-                            borderTopLeftRadius: 'var(--radius-md)',
-                            borderTopRightRadius: 'var(--radius-md)',
-                            overflow: 'hidden',
-                            position: 'relative'
+                            position: 'relative',
+                            overflow: 'hidden'
                         }}>
                             <img
                                 src={part.image}
                                 alt={part.name}
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                                className="part-image"
                             />
                             <div style={{
                                 position: 'absolute',
-                                top: '0.75rem',
-                                right: '0.75rem'
+                                top: '1rem',
+                                left: '1rem',
+                                zIndex: 10
                             }}>
-                                <span className="badge badge-success">
+                                <div className="glass" style={{
+                                    padding: '0.375rem 0.75rem',
+                                    borderRadius: 'var(--radius-sm)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 700,
+                                    color: 'var(--primary)'
+                                }}>
+                                    <Star size={12} fill="currentColor" />
+                                    {part.rating}
+                                </div>
+                            </div>
+                            <div style={{
+                                position: 'absolute',
+                                bottom: '1rem',
+                                right: '1rem',
+                                zIndex: 10
+                            }}>
+                                <span style={{
+                                    backgroundColor: 'white',
+                                    color: 'var(--success)',
+                                    padding: '0.375rem 0.75rem',
+                                    borderRadius: 'var(--radius-sm)',
+                                    fontSize: '0.7rem',
+                                    fontWeight: 800,
+                                    boxShadow: 'var(--shadow-md)',
+                                    textTransform: 'uppercase'
+                                }}>
                                     In Stock
                                 </span>
                             </div>
                         </div>
 
-                        <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                            <h3 style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>{part.name}</h3>
-
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                color: 'var(--text-muted)',
-                                fontSize: '0.875rem',
-                                marginBottom: '1rem'
-                            }}>
-                                <Package size={14} />
-                                <span> Fits: {part.car}</span>
+                        <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.25rem' }}>{part.name}</h3>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', color: 'var(--text-muted)', fontSize: '0.8125rem', fontWeight: 500 }}>
+                                    <Package size={14} strokeWidth={2.5} />
+                                    <span>{part.car}</span>
+                                </div>
                             </div>
 
-                            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 700, fontSize: '1.25rem', color: 'var(--text-main)' }}>
-                                    <Tag size={18} style={{ color: 'var(--accent)' }} />
-                                    {part.price}
+                            <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
+                                <div>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--secondary)', textTransform: 'uppercase', display: 'block', marginBottom: '-0.25rem' }}>Price</span>
+                                    <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent)' }}>
+                                        <span style={{ fontSize: '0.875rem', marginRight: '0.125rem' }}>AED</span>{part.price}
+                                    </span>
                                 </div>
 
-                                <button className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
-                                    View Details
+                                <button className="btn btn-primary" style={{ padding: '0.625rem 1rem', borderRadius: 'var(--radius-md)' }}>
+                                    <ChevronRight size={20} />
                                 </button>
                             </div>
                         </div>
@@ -79,22 +112,49 @@ const Catalogue = () => {
                 ))}
             </div>
 
-            <div style={{
-                marginTop: '4rem',
-                padding: '3rem',
-                backgroundColor: 'var(--primary)',
-                borderRadius: 'var(--radius-lg)',
+            <div className="custom-banner" style={{
+                marginTop: '6rem',
+                marginBottom: '4rem',
+                padding: 'clamp(2rem, 8vw, 5rem) 2rem',
+                background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)',
+                borderRadius: 'var(--radius-xl)',
                 color: 'white',
-                textAlign: 'center'
+                textAlign: 'center',
+                position: 'relative',
+                overflow: 'hidden',
+                boxShadow: 'var(--shadow-xl)'
             }}>
-                <h3 style={{ color: 'white', fontSize: '1.5rem', marginBottom: '1rem' }}>Can't find your part?</h3>
-                <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '2rem', maxWidth: '600px', margin: '0 auto 2rem' }}>
-                    We work with over 500 dealers in Sharjah Industrial Area. If it's not in our catalogue, we can find it for you in minutes.
-                </p>
-                <button className="btn btn-primary" style={{ padding: '1rem 3rem' }}>
-                    Submit Custom Request
-                </button>
+                {/* Animated Background Elements */}
+                <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '40%', height: '80%', background: 'var(--accent)', filter: 'blur(100px)', opacity: 0.1, borderRadius: '50%' }}></div>
+                <div style={{ position: 'absolute', bottom: '-10%', left: '-10%', width: '30%', height: '60%', background: 'var(--accent)', filter: 'blur(80px)', opacity: 0.1, borderRadius: '50%' }}></div>
+
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <h3 style={{ color: 'white', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', marginBottom: '1.5rem', letterSpacing: '-0.03em' }}>
+                        Not in the catalogue? <br /><span style={{ color: 'rgba(255,255,255,0.5)' }}>We'll find it for you.</span>
+                    </h3>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '2.5rem', maxWidth: '600px', margin: '0 auto 2.5rem', fontSize: '1.125rem' }}>
+                        Our agent network in Sharjah Industrial Area can source rare or specific parts in under 30 minutes.
+                    </p>
+                    <button className="btn btn-primary" style={{ padding: '1.25rem 3rem', fontSize: '1.125rem' }}>
+                        <PenTool size={20} />
+                        Submit Custom Request
+                    </button>
+                </div>
             </div>
+
+            <style>{`
+        .part-card:hover .part-image {
+          transform: scale(1.1);
+        }
+        @media (max-width: 640px) {
+          .parts-grid {
+            gap: 1.5rem;
+          }
+          .custom-banner {
+            padding: 3rem 1.5rem;
+          }
+        }
+      `}</style>
         </div>
     );
 };

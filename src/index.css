@@ -1,39 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --primary: #1e293b;
-  --primary-light: #334155;
-  --secondary: #94a3b8;
+  --primary: #0f172a;
+  --primary-light: #1e293b;
+  --secondary: #64748b;
   --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.5);
   --accent-hover: #2563eb;
-  --background: #f8fafc;
-  --card-bg: #ffffff;
+  --background: #f1f5f9;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
   --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
-  --success: #22c55e;
+  --text-muted: #475569;
+  --border: rgba(226, 232, 240, 0.8);
+  --success: #10b981;
+  --error: #ef4444;
   
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
   
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--background);
   color: var(--text-main);
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+  min-height: 100vh;
 }
 
 #root {
@@ -44,14 +55,20 @@ body {
 
 /* Typography */
 h1, h2, h3, h4 {
-  font-weight: 700;
+  font-weight: 800;
   color: var(--primary);
-  line-height: 1.2;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+p {
+  color: var(--text-muted);
 }
 
 a {
   text-decoration: none;
   color: inherit;
+  transition: all 0.2s ease;
 }
 
 button {
@@ -60,79 +77,142 @@ button {
   border: none;
   outline: none;
   background: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Utilities */
+/* Glassmorphism Classes */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+/* Container */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1.25rem;
 }
 
-/* Components */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+/* Cards */
 .card {
   background: var(--card-bg);
-  border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-md);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--accent-glow);
 }
 
+/* Buttons */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.875rem 1.75rem;
   border-radius: var(--radius-md);
-  font-weight: 600;
-  transition: all 0.2s ease;
-  gap: 0.5rem;
+  font-weight: 700;
+  gap: 0.625rem;
+  font-size: 0.9375rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:active {
+  transform: scale(0.95);
 }
 
 .btn-primary {
-  background-color: var(--accent);
+  background: var(--accent);
   color: white;
+  box-shadow: 0 4px 14px 0 var(--accent-glow);
 }
 
 .btn-primary:hover {
-  background-color: var(--accent-hover);
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 var(--accent-glow);
 }
 
 .btn-outline {
+  background: var(--glass-bg);
   border: 1px solid var(--border);
   color: var(--primary);
+  backdrop-filter: blur(4px);
 }
 
 .btn-outline:hover {
-  background-color: var(--background);
-  border-color: var(--secondary);
+  background: white;
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
-.badge {
-  display: inline-flex;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
+/* Inputs */
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
   font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--primary-light);
+  padding-left: 0.25rem;
 }
 
-.badge-success {
-  background-color: #dcfce7;
-  color: var(--success);
+input, textarea, select {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: white;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  color: var(--text-main);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+  background: white;
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.4s ease forwards;
+  animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Mobile Tweaks */
+@media (max-width: 768px) {
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 1.75rem; }
+  
+  .btn {
+    padding: 1rem 1.5rem;
+    width: 100%;
+  }
 }
