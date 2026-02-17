@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Send, AlertCircle, Car, Settings, User, Phone, ClipboardList } from 'lucide-react';
 
-const WEBHOOK_URL = 'https://13f5-2406-d00-cccf-72e2-497a-37-3c22-23f2.ngrok-free.app/webhook/part-request';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://demo-api.ngrok-free.app';
+const WEBHOOK_URL = `${API_BASE_URL}/webhook/part-request`;
 
 const RequestForm = ({ onSubmit }) => {
     const [formData, setFormData] = useState({
         name: '',
+        email: '',
         phone: '',
         car_make: '',
         model: '',
@@ -19,6 +21,11 @@ const RequestForm = ({ onSubmit }) => {
     const validate = () => {
         const newErrors = {};
         if (!formData.name.trim()) newErrors.name = 'Full name is required';
+        if (!formData.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = 'Invalid email format';
+        }
         if (!formData.car_make.trim()) newErrors.car_make = 'Car make is required';
         if (!formData.model.trim()) newErrors.model = 'Car model is required';
         if (!formData.year.trim()) newErrors.year = 'Model year is required';
@@ -87,6 +94,13 @@ const RequestForm = ({ onSubmit }) => {
                                     <div style={{ position: 'relative' }}>
                                         <input name="name" value={formData.name} onChange={handleChange} placeholder="Ahmed Salem" style={inputStyle(errors.name)} />
                                         {errors.name && <p style={errorStyle}><AlertCircle size={14} /> {errors.name}</p>}
+                                    </div>
+                                </div>
+                                <div className="input-group">
+                                    <label className="label">Email Address</label>
+                                    <div style={{ position: 'relative' }}>
+                                        <input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="ahmed@example.com" style={inputStyle(errors.email)} />
+                                        {errors.email && <p style={errorStyle}><AlertCircle size={14} /> {errors.email}</p>}
                                     </div>
                                 </div>
                                 <div className="input-group">

@@ -1,7 +1,7 @@
 import React from 'react';
-import { PenTool, Car, LayoutGrid } from 'lucide-react';
+import { PenTool, Car, LayoutGrid, LogOut } from 'lucide-react';
 
-const Navbar = ({ activeTab, setActiveTab }) => {
+const Navbar = ({ activeTab, setActiveTab, isLoggedIn, onLogout }) => {
   return (
     <>
       {/* Desktop Header */}
@@ -59,6 +59,15 @@ const Navbar = ({ activeTab, setActiveTab }) => {
               <PenTool size={18} />
               <span>Request Part</span>
             </button>
+            {isLoggedIn && (
+              <button
+                className="btn btn-outline"
+                onClick={onLogout}
+                style={{ padding: '0.625rem 1rem', fontSize: '0.875rem', color: 'var(--error)', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+              >
+                <LogOut size={18} />
+              </button>
+            )}
           </div>
         </div>
       </nav>
@@ -121,6 +130,25 @@ const Navbar = ({ activeTab, setActiveTab }) => {
           </div>
           <span style={{ fontSize: '0.7rem', fontWeight: 700 }}>Request</span>
         </button>
+
+        {isLoggedIn && (
+          <button
+            onClick={onLogout}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.25rem',
+              color: 'var(--error)',
+              flex: 1
+            }}
+          >
+            <div style={{ padding: '0.5rem', display: 'flex' }}>
+              <LogOut size={24} />
+            </div>
+            <span style={{ fontSize: '0.7rem', fontWeight: 700 }}>Logout</span>
+          </button>
+        )}
       </nav>
 
       <style>{`
