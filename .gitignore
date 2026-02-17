@@ -13,7 +13,6 @@ dist-ssr
 *.local
 .env
 .env.*
-!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -36,3 +35,4 @@ README.md
 .eslint.config.js
 prompt.md
 vite.config.js
+eslint.config.js
