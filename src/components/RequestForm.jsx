@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Send, AlertCircle, Car, Settings, User, Phone, ClipboardList } from 'lucide-react';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://demo-api.ngrok-free.app';
-const WEBHOOK_URL = `${API_BASE_URL}/webhook/part-request`;
+import { getApiBaseUrl, API_ENDPOINTS } from '../utils/api-config';
+
+const WEBHOOK_URL = API_ENDPOINTS.PART_REQUEST(getApiBaseUrl());
 
 const RequestForm = ({ onSubmit }) => {
     const [formData, setFormData] = useState({

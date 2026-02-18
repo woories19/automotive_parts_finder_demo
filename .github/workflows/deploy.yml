@@ -25,7 +25,9 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          VERSION="0.1.${{ github.run_number }}-${GITHUB_SHA::7}"
+          VITE_APP_VERSION=$VERSION npm run build
 
       - name: Deploy build to branch
         uses: peaceiris/actions-gh-pages@v4

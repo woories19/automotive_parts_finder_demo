@@ -4,11 +4,13 @@ import Navbar from './components/Navbar';
 import Catalogue from './components/Catalogue';
 import RequestForm from './components/RequestForm';
 import OTPVerification from './components/OTPVerification';
+import DevBadge from './components/DevBadge';
+import { getApiBaseUrl, API_ENDPOINTS } from './utils/api-config';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://demo-api.ngrok-free.app';
-const OFFERS_FETCH_URL = `${API_BASE_URL}/webhook/get-offers`;
-const OTP_SEND_URL = `${API_BASE_URL}/webhook/part-request`;
-const OTP_VERIFY_URL = `${API_BASE_URL}/webhook/verify-otp`;
+const BASE_URL = getApiBaseUrl();
+const OFFERS_FETCH_URL = API_ENDPOINTS.GET_OFFERS(BASE_URL);
+const OTP_SEND_URL = API_ENDPOINTS.PART_REQUEST(BASE_URL);
+const OTP_VERIFY_URL = API_ENDPOINTS.VERIFY_OTP(BASE_URL);
 
 function App() {
   const [activeTab, setActiveTab] = useState('catalogue');
@@ -107,6 +109,7 @@ function App() {
 
   return (
     <>
+      <DevBadge />
       <Navbar
         activeTab={activeTab === 'waiting' || activeTab === 'otp' ? 'request' : activeTab}
         setActiveTab={setActiveTab}
