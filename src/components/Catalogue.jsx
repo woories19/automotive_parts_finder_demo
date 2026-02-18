@@ -2,8 +2,8 @@ import React from 'react';
 import { Package, Tag, ChevronRight, Star, ShieldCheck, PenTool } from 'lucide-react';
 
 const MOCK_PARTS = [
-    { id: 1, name: 'Performance Brake Pads', car: 'Toyota Camry 2018+', price: '245', image: 'https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.8 },
-    { id: 2, name: 'Synthetic Oil Filter', car: 'Nissan Altima 2015-2020', price: '45', image: 'https://images.unsplash.com/photo-1635773100235-44c1d2f58842?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.9 },
+    { id: 1, name: 'Performance Brake Pads', car: 'Toyota Camry 2018+', price: '245', image: 'https://www.brakeperformance.com/_next/image?url=https%3A%2F%2Fbrakeperformance.com%2Fapi%2Fadmin%2Fbase_product_images%2F114%2Ffile%2F1743110378%3Fimage%3D1&w=640&q=75', stock: true, rating: 4.8 },
+    { id: 2, name: 'Synthetic Oil Filter', car: 'Nissan Altima 2015-2020', price: '45', image: 'https://s3.amazonaws.com/rp-part-images/assets/abe218ec38864e8227c134097c0f1c7e.webp', stock: true, rating: 4.9 },
     { id: 3, name: 'Iridium Spark Plugs', car: 'Honda Accord 2018+', price: '180', image: 'https://images.unsplash.com/photo-1597762137731-08f36c4b9d0e?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.7 },
     { id: 4, name: 'Active Carbon Air Filter', car: 'Hyundai Tucson 2016+', price: '65', image: 'https://images.unsplash.com/photo-1636113645324-4f8087948332?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.6 },
     { id: 5, name: 'Gas-Charged Shock Absorber', car: 'Lexus LS 2010-2017', price: '420', image: 'https://images.unsplash.com/photo-1605367611438-297f6734d85e?q=80&w=600&auto=format&fit=crop', stock: true, rating: 4.9 },
