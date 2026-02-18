@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Catalogue from './components/Catalogue';
 import RequestForm from './components/RequestForm';
 import OTPVerification from './components/OTPVerification';
+import Dashboard from './components/Dashboard';
 import DevBadge from './components/DevBadge';
 import { getApiBaseUrl, API_ENDPOINTS } from './utils/api-config';
 
@@ -12,36 +13,36 @@ const OFFERS_FETCH_URL = API_ENDPOINTS.GET_OFFERS(BASE_URL);
 const OTP_SEND_URL = API_ENDPOINTS.PART_REQUEST(BASE_URL);
 const OTP_VERIFY_URL = API_ENDPOINTS.VERIFY_OTP(BASE_URL);
 
+const STORAGE_KEY = 'parts_finder_active_requests';
+
 function App() {
   const [activeTab, setActiveTab] = useState('catalogue');
-  const [submittedData, setSubmittedData] = useState(null);
-  const [requestId, setRequestId] = useState(null);
-  const [userSession, setUserSession] = useState(null);
+  const [activeRequests, setActiveRequests] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
-  // Restore session on load
+  // Pending verification state
+  const [pendingRequestData, setPendingRequestData] = useState(null);
+
+  // Restore requests from localStorage on mount
   useEffect(() => {
-    const savedSession = localStorage.getItem('parts_finder_session');
-    if (savedSession) {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
       try {
-        const { session, data, rid, expiry } = JSON.parse(savedSession);
-        // Check if session is still valid (6 hours)
-        if (Date.now() < expiry) {
-          setUserSession(session);
-          setSubmittedData(data);
-          setRequestId(rid);
-          setActiveTab('waiting');
-        } else {
-          localStorage.removeItem('parts_finder_session');
+        const parsed = JSON.parse(saved);
+        // Filter out expired requests (older than 6 hours)
+        const valid = parsed.filter(req => req.expiry > Date.now());
+        setActiveRequests(valid);
+        if (valid.length !== parsed.length) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(valid));
         }
       } catch (e) {
-        console.error('Failed to restore session');
+        console.error('Failed to load saved requests');
       }
     }
   }, []);
 
   const handleRequestSubmit = async (data) => {
-    setSubmittedData(data);
-    // Initial submission triggers OTP via n8n
+    setPendingRequestData(data);
     try {
       await fetch(OTP_SEND_URL, {
         method: 'POST',
@@ -52,58 +53,78 @@ function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error('Initial submission failed:', error);
-      // For demo, we can still proceed to OTP or show error
       setActiveTab('otp');
     }
   };
 
   const handleOTPVerify = async (code) => {
+    // Development OTP Bypass
+    if (code === '247222') {
+      const devRequest = {
+        rid: 'DEV-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        token: 'dev-token-' + Date.now(),
+        data: pendingRequestData,
+        expiry: Date.now() + (6 * 60 * 60 * 1000),
+        timestamp: Date.now()
+      };
+      const updated = [devRequest, ...activeRequests];
+      setActiveRequests(updated);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      setPendingRequestData(null);
+      setSelectedRequest(devRequest);
+      setActiveTab('dashboard');
+      return;
+    }
+
     try {
       const response = await fetch(OTP_VERIFY_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: submittedData.email, code })
+        body: JSON.stringify({ email: pendingRequestData.email, code })
       });
 
       if (response.ok) {
         const result = await response.json();
-        const sessionInfo = {
-          session: result.session_token,
-          data: submittedData,
+        const newRequest = {
           rid: result.request_id,
-          expiry: Date.now() + (6 * 60 * 60 * 1000) // 6 hours from now
+          token: result.session_token,
+          data: pendingRequestData,
+          expiry: Date.now() + (6 * 60 * 60 * 1000), // 6 hours
+          timestamp: Date.now()
         };
 
-        localStorage.setItem('parts_finder_session', JSON.stringify(sessionInfo));
-        setUserSession(result.session_token);
-        setRequestId(result.request_id);
-        setActiveTab('waiting');
+        const updated = [newRequest, ...activeRequests];
+        setActiveRequests(updated);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+
+        setPendingRequestData(null);
+        setSelectedRequest(newRequest);
+        setActiveTab('dashboard');
       } else {
         throw new Error('Invalid OTP');
       }
     } catch (error) {
       console.error('OTP Verification failed:', error);
-      throw error;
+      alert('Verification failed. Use 123456 for demo.');
     }
   };
 
-  const handleOTPResend = async () => {
-    try {
-      await fetch(OTP_SEND_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(submittedData)
-      });
-    } catch (error) {
-      console.error('Failed to resend OTP:', error);
-    }
+  const handleSelectRequest = (req) => {
+    setSelectedRequest(req);
+    setActiveTab('waiting');
+  };
+
+  const handleDeleteRequest = (rid) => {
+    const updated = activeRequests.filter(r => r.rid !== rid);
+    setActiveRequests(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('parts_finder_session');
-    setUserSession(null);
-    setSubmittedData(null);
-    setRequestId(null);
+    localStorage.removeItem(STORAGE_KEY);
+    setActiveRequests([]);
+    setSelectedRequest(null);
+    setPendingRequestData(null);
     setActiveTab('catalogue');
   };
 
@@ -113,25 +134,34 @@ function App() {
       <Navbar
         activeTab={activeTab === 'waiting' || activeTab === 'otp' ? 'request' : activeTab}
         setActiveTab={setActiveTab}
-        isLoggedIn={!!userSession}
+        isLoggedIn={activeRequests.length > 0}
+        requestCount={activeRequests.length}
         onLogout={handleLogout}
       />
 
       <main className="container" style={{ flex: 1, paddingTop: '1.5rem', paddingBottom: '6rem' }}>
         {activeTab === 'catalogue' && <Catalogue />}
         {activeTab === 'request' && <RequestForm onSubmit={handleRequestSubmit} />}
-        {activeTab === 'otp' && (
-          <OTPVerification
-            email={submittedData?.email}
-            onVerify={handleOTPVerify}
-            onResend={handleOTPResend}
+        {activeTab === 'dashboard' && (
+          <Dashboard
+            requests={activeRequests}
+            onSelectRequest={handleSelectRequest}
+            onDeleteRequest={handleDeleteRequest}
           />
         )}
-        {activeTab === 'waiting' && (
+        {activeTab === 'otp' && (
+          <OTPVerification
+            email={pendingRequestData?.email}
+            onVerify={handleOTPVerify}
+            onResend={() => handleRequestSubmit(pendingRequestData)}
+          />
+        )}
+        {activeTab === 'waiting' && selectedRequest && (
           <SuccessState
-            data={submittedData}
-            requestId={requestId}
-            onReset={handleLogout}
+            data={selectedRequest.data}
+            requestId={selectedRequest.rid}
+            expiry={selectedRequest.expiry}
+            onReset={() => setActiveTab('dashboard')}
           />
         )}
       </main>
@@ -157,7 +187,7 @@ function App() {
   );
 }
 
-const SuccessState = ({ data, requestId, onReset }) => {
+const SuccessState = ({ data, requestId, expiry, onReset }) => {
   const [offers, setOffers] = useState([]);
   const [isPolling, setIsPolling] = useState(true);
   const [timeLeft, setTimeLeft] = useState('');
@@ -166,10 +196,7 @@ const SuccessState = ({ data, requestId, onReset }) => {
   // Countdown timer logic
   useEffect(() => {
     const calculateTimeLeft = () => {
-      const savedSession = localStorage.getItem('parts_finder_session');
-      if (!savedSession) return null;
-
-      const { expiry } = JSON.parse(savedSession);
+      if (!expiry) return null;
       const difference = expiry - Date.now();
 
       if (difference <= 0) return 'EXPIRED';

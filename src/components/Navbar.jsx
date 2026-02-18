@@ -1,7 +1,7 @@
 import React from 'react';
-import { PenTool, Car, LayoutGrid, LogOut } from 'lucide-react';
+import { PenTool, Car, LayoutGrid, LogOut, Clock } from 'lucide-react';
 
-const Navbar = ({ activeTab, setActiveTab, isLoggedIn, onLogout }) => {
+const Navbar = ({ activeTab, setActiveTab, isLoggedIn, onLogout, requestCount }) => {
   return (
     <>
       {/* Desktop Header */}
@@ -59,6 +59,34 @@ const Navbar = ({ activeTab, setActiveTab, isLoggedIn, onLogout }) => {
               <PenTool size={18} />
               <span>Request Part</span>
             </button>
+
+            {isLoggedIn && (
+              <button
+                className={`btn ${activeTab === 'dashboard' || activeTab === 'waiting' ? 'btn-primary' : 'btn-outline'}`}
+                onClick={() => setActiveTab('dashboard')}
+                style={{ padding: '0.625rem 1.25rem', fontSize: '0.875rem', position: 'relative' }}
+              >
+                <Clock size={18} />
+                <span>My Requests</span>
+                {requestCount > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-5px',
+                    right: '-5px',
+                    backgroundColor: 'var(--error)',
+                    color: 'white',
+                    fontSize: '0.6rem',
+                    fontWeight: 900,
+                    padding: '2px 6px',
+                    borderRadius: '10px',
+                    border: '2px solid white'
+                  }}>
+                    {requestCount}
+                  </span>
+                )}
+              </button>
+            )}
+
             {isLoggedIn && (
               <button
                 className="btn btn-outline"
@@ -130,6 +158,47 @@ const Navbar = ({ activeTab, setActiveTab, isLoggedIn, onLogout }) => {
           </div>
           <span style={{ fontSize: '0.7rem', fontWeight: 700 }}>Request</span>
         </button>
+
+        {isLoggedIn && (
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.25rem',
+              color: (activeTab === 'dashboard' || activeTab === 'waiting') ? 'var(--accent)' : 'var(--secondary)',
+              flex: 1,
+              position: 'relative'
+            }}
+          >
+            <div style={{
+              padding: '0.5rem',
+              borderRadius: 'var(--radius-md)',
+              backgroundColor: (activeTab === 'dashboard' || activeTab === 'waiting') ? 'var(--accent-glow)' : 'transparent',
+              display: 'flex'
+            }}>
+              <Clock size={24} strokeWidth={(activeTab === 'dashboard' || activeTab === 'waiting') ? 2.5 : 2} />
+            </div>
+            <span style={{ fontSize: '0.7rem', fontWeight: 700 }}>My Requests</span>
+            {requestCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '0',
+                right: '15%',
+                backgroundColor: 'var(--error)',
+                color: 'white',
+                fontSize: '0.55rem',
+                fontWeight: 900,
+                padding: '1px 4px',
+                borderRadius: '8px',
+                border: '1px solid white'
+              }}>
+                {requestCount}
+              </span>
+            )}
+          </button>
+        )}
 
         {isLoggedIn && (
           <button
